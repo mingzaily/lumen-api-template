@@ -88,7 +88,7 @@ Service间可互相调用
 
 #### 使用
 
-为了方便Repository使用model字段，可以按照第三方包`barryvdh/laravel-ide-helper`
+为了方便Repository使用model字段，可以安装第三方包`barryvdh/laravel-ide-helper`
 
 1.  `composer require barryvdh/laravel-ide-helper --dev`本地安装ide-helper
 
