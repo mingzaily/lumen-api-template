@@ -8,6 +8,7 @@ use App\Traits\Response;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -44,6 +45,25 @@ class ExceptionReport
             }
         }
         return null;
+    }
+
+    /**
+     * Convert the given exception to an array.
+     *
+     * @param  Exception  $e
+     * @return array
+     */
+    public static function convertExceptionToArray(Exception $e)
+    {
+        return config('app.debug', false) ? [
+            'message' => $e->getMessage(),
+            'exception' => get_class($e),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => collect($e->getTrace())->map(function ($trace) {
+                return Arr::except($trace, ['args']);
+            })->all(),
+        ] : null;
     }
 
     public function report()

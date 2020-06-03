@@ -17,7 +17,7 @@ lumen7  [启动模板](https://github.com/Jiannei/lumen-api-starter)
 
 ### 统一的响应结构
 
-> status—— 状态值，0为成功，-1为系统错误，>1为业务错误，错误码可自定义`App\Constants\StatusConstant`  
+> status—— 业务状态值，0为成功，-1为系统错误，>1为业务错误，错误码可自定义`App\Constants\StatusConstant`  
 > message—— 当状态值为非0时有效，用于显示错误信息。成功显示`Success`  
 > data—— 包含响应的 body。状态值为非`0` 时，data返回错误原因或异常名称（取决于是否开启debug模式）  
 
@@ -44,16 +44,17 @@ lumen7  [启动模板](https://github.com/Jiannei/lumen-api-starter)
 protected function prepareJsonResponse($request, Exception $exception)
 {
     // ajax请求
+    // 自定义错误（继承RenderException），抛出时写清楚业务码，错误描述，httpCode
     // 需要自定义处理的框架异常
     if ($report = ExceptionReport::shouldReport($request, $exception)) {
-    	return $report->report();
+        return $report->report();
     }
-    // 无法预计的异常和自定义错误（继承RenderException），检查开启debug决定是否对外暴露错误
+    // 无法预计的框架异常，检查开启debug决定是否对外暴露错误
     return $this->fail(
-        $exception instanceof RenderException ? $exception->getStatus() : StatusConstant::ServerError,
-        $exception instanceof RenderException ? $exception->getMessage() : 'Server Error',
-        $exception instanceof RenderException ? $exception->getCode() : HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-        env('APP_DEBUG') ? $this->convertExceptionToArray($exception) : null
+        StatusConstant::ServerError,
+        'Server Error',
+        HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
+        ExceptionReport::convertExceptionToArray($exception)
     );
 }
 ```

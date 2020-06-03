@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use App\Traits\Response;
+use Illuminate\Support\Arr;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -64,16 +65,17 @@ class Handler extends ExceptionHandler
     protected function prepareJsonResponse($request, Exception $exception)
     {
         // ajax请求
+        // 自定义错误（继承RenderException），抛出时写明业务码，错误描述，httpCode
         // 需要自定义处理的框架异常
         if ($report = ExceptionReport::shouldReport($request, $exception)) {
             return $report->report();
         }
-        // 无法预计的异常和自定义错误（继承RenderException），检查开启debug决定是否对外暴露错误
+        // 无法预计的框架异常，检查开启debug决定是否对外暴露错误
         return $this->fail(
-            $exception instanceof RenderException ? $exception->getStatus() : StatusConstant::ServerError,
-            $exception instanceof RenderException ? $exception->getMessage() : 'Server Error',
-            $exception instanceof RenderException ? $exception->getCode() : HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-            env('APP_DEBUG') ? $this->convertExceptionToArray($exception) : null
+            StatusConstant::ServerError,
+            'Server Error',
+            HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
+            ExceptionReport::convertExceptionToArray($exception)
         );
     }
 }
