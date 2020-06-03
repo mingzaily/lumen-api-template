@@ -17,9 +17,9 @@ lumen7  [启动模板](https://github.com/Jiannei/lumen-api-starter)
 
 ### 统一的响应结构
 
-> status—— 状态值，0为成功，-1为系统错误，>1为业务错误，错误码可自定义`App\Constants\StatusConstant`
-> message—— 当状态值为非0时有效，用于显示错误信息。成功显示`Success`
-> data—— 包含响应的 body。状态值为非`0` 时，data返回错误原因或异常名称（取决于是否开启debug模式）
+> status—— 状态值，0为成功，-1为系统错误，>1为业务错误，错误码可自定义`App\Constants\StatusConstant`  
+> message—— 当状态值为非0时有效，用于显示错误信息。成功显示`Success`  
+> data—— 包含响应的 body。状态值为非`0` 时，data返回错误原因或异常名称（取决于是否开启debug模式）  
 
 #### 说明
 
