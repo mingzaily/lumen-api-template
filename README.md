@@ -44,7 +44,7 @@ lumen7  [启动模板](https://github.com/Jiannei/lumen-api-starter)
 protected function prepareJsonResponse($request, Exception $exception)
 {
     // ajax请求
-	// 需要自定义处理的框架异常
+    // 需要自定义处理的框架异常
     if ($report = ExceptionReport::shouldReport($request, $exception)) {
     	return $report->report();
     }
