@@ -65,11 +65,11 @@ class Handler extends ExceptionHandler
     protected function prepareJsonResponse($request, Exception $exception)
     {
         // ajax请求
-        // 自定义错误（继承RenderException），抛出时写明业务码，错误描述，httpCode
         // 需要自定义处理的框架异常
         if ($report = ExceptionReport::shouldReport($request, $exception)) {
             return $report->report();
         }
+        // 自定义异常（继承RenderException），已注册reader函数；抛出时写明业务码，错误描述，httpCode
         // 无法预计的框架异常，检查开启debug决定是否对外暴露错误
         return $this->fail(
             StatusConstant::ServerError,

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -9,13 +10,16 @@ use Illuminate\Validation\ValidationException;
 
 class AuthorizationController extends Controller
 {
+    protected $service;
+
     /**
      * Create a new AuthController instance.
      *
-     * @return void
+     * @param UserService $service
      */
-    public function __construct()
+    public function __construct(UserService $service)
     {
+        $this->service = $service;
         $this->middleware('auth:api', ['except' => ['store']]);
     }
 
@@ -27,18 +31,15 @@ class AuthorizationController extends Controller
     public function store(Request $request)
     {
         // 数据验证
-        $this->validate($request, [
-            'username' => 'required',
-            'password' => 'required'
-        ]);
+        $this->validate($request,
+            ['code' => 'required'],
+            ['code.required' => '认证码不能为空']
+        );
 
         // 登录
-        $credentials = [
-            'username' => $request->input('username'),
-            'password' => $request->input('password'),
-        ];
-        if (!$token = Auth::attempt($credentials)) {
-            $this->errorUnauthorized('username or password error');
+        $user_id = $this->service->check($request->all());
+        if (!$token = Auth::loginUsingId($user_id)) {
+            $this->errorUnauthorized();
         }
         return $this->respondWithToken($token);
     }
