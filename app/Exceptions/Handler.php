@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Constants\ErrCode;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,6 +28,7 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
         AuthorizationException::class,
+        AuthenticationException::class,
         HttpException::class,
         ModelNotFoundException::class,
         NotFoundHttpException::class,
