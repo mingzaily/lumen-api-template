@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Constants\ErrCode;
+use App\Exceptions\RenderException;
 use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -10,16 +12,16 @@ use Illuminate\Validation\ValidationException;
 
 class AuthorizationController extends Controller
 {
-    protected $service;
+    protected $userService;
 
     /**
      * Create a new AuthController instance.
      *
-     * @param UserService $service
+     * @param UserService $userService
      */
-    public function __construct(UserService $service)
+    public function __construct(UserService $userService)
     {
-        $this->service = $service;
+        $this->userService = $userService;
         $this->middleware('auth:api', ['except' => ['store']]);
     }
 
@@ -32,13 +34,13 @@ class AuthorizationController extends Controller
     {
         // 数据验证
         $this->validate($request,
-            ['code' => 'required'],
-            ['code.required' => '认证码不能为空']
+            ['username' => 'required', 'password' => 'required']
         );
 
+        throw new RenderException(ErrCode::OwnServer, 'abcdefg');
         // 登录
-        $user_id = $this->service->check($request->all());
-        if (!$token = Auth::loginUsingId($user_id)) {
+        $credentials = $request->only(['username', 'password']);
+        if (!$token = auth()->attempt($credentials)) {
             $this->errorUnauthorized();
         }
         return $this->respondWithToken($token);
@@ -49,7 +51,7 @@ class AuthorizationController extends Controller
      */
     public function destroy()
     {
-        Auth::logout();
+        auth()->logout();
         return $this->noContent('Successfully logged out');
     }
 
@@ -58,7 +60,7 @@ class AuthorizationController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(Auth::getFacadeRoot()->refresh());
+        return $this->respondWithToken(auth()->refresh());
     }
 
     /**
@@ -70,7 +72,7 @@ class AuthorizationController extends Controller
         return $this->success([
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'expires_time' => Carbon::now()->addMinutes(Auth::getFacadeRoot()->factory()->getTTL())->toDateTimeString()
+            'expires_time' => Carbon::now()->addMinutes(auth()->factory()->getTTL())->toDateTimeString()
         ]);
     }
 }

@@ -3,10 +3,11 @@
 
 namespace App\Exceptions;
 
-use App\Constants\StatusConstant;
+use App\Constants\ErrCode;
 use App\Traits\Response;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -16,16 +17,23 @@ class ExceptionReport
 {
     use Response;
 
+    /**
+     * @var Request
+     */
     protected $request;
 
+    /**
+     * @var Exception
+     */
     protected $exception;
 
     protected $report;
 
     protected $doReport = [
-        AuthenticationException::class => ['status' => StatusConstant::AuthError, 'message' => 'Token is Invalid', 'code' => 401],
-        NotFoundHttpException::class => ['status' => StatusConstant::NotFoundError, 'message' => 'Not Found', 'code' => 404],
-        MethodNotAllowedHttpException::class => ['status' => StatusConstant::NotFoundError, 'message' => 'Method Not Allow', 'code' => 405],
+        AuthenticationException::class => ['code' => ErrCode::Authenticate, 'statusCode' => 401],
+        NotFoundHttpException::class => ['code' => ErrCode::NotFound, 'statusCode' => 404, 'message' => 'Route or resource not found'],
+        ModelNotFoundException::class => ['code' => ErrCode::ModelNotFound, 'statusCode' => 404],
+        MethodNotAllowedHttpException::class => ['code' => ErrCode::MethodNotFound, 'statusCode' => 405],
     ];
 
     public function __construct(Request $request, Exception $exception)
@@ -69,9 +77,9 @@ class ExceptionReport
     public function report()
     {
         $exceptionItem = $this->doReport[$this->report];
-        $status = $exceptionItem['status'];
-        $message = $exceptionItem['message'];
         $code = $exceptionItem['code'];
-        return $this->fail($status, $message, $code);
+        $message = $this->exception->getMessage() ? : $exceptionItem['message'];
+        $statusCode = $this->exception->getCode() ? : $exceptionItem['statusCode'];
+        return $this->fail($code, $message, $statusCode);
     }
 }

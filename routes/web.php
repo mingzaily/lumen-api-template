@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::post('authorization', 'AuthorizationController@store');
 Route::delete('authorization', 'AuthorizationController@destroy');
 Route::put('authorization', 'AuthorizationController@update');
-Route::get('authorization', 'AuthorizationController@show');
 // 用户
 Route::get('/user', 'UserController@show');
 Route::post('/user', 'UserController@store');

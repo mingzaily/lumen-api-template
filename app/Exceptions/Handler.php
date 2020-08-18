@@ -2,15 +2,14 @@
 
 namespace App\Exceptions;
 
-use App\Constants\StatusConstant;
+use App\Constants\ErrCode;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response as HttpResponse;
+use Symfony\Component\HttpFoundation\Response as HttpStatus;
 use App\Traits\Response;
-use Illuminate\Support\Arr;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -20,6 +19,7 @@ use Throwable;
 class Handler extends ExceptionHandler
 {
     use Response;
+
     /**
      * A list of the exception types that should not be reported.
      *
@@ -31,6 +31,7 @@ class Handler extends ExceptionHandler
         ModelNotFoundException::class,
         NotFoundHttpException::class,
         MethodNotAllowedHttpException::class,
+        RenderException::class
     ];
 
     /**
@@ -72,9 +73,9 @@ class Handler extends ExceptionHandler
         // 自定义异常（继承RenderException），已注册reader函数；抛出时写明业务码，错误描述，httpCode
         // 无法预计的框架异常，检查开启debug决定是否对外暴露错误
         return $this->fail(
-            StatusConstant::ServerError,
+            ErrCode::OwnServer,
             'Server Error',
-            HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
+            HttpStatus::HTTP_INTERNAL_SERVER_ERROR,
             ExceptionReport::convertExceptionToArray($exception)
         );
     }

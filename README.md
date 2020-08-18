@@ -63,9 +63,9 @@ protected function prepareJsonResponse($request, Exception $exception)
 
 ```php
 protected $doReport = [
-    AuthenticationException::class => ['status' => StatusConstant::AuthError, 'message' => 'Token is Invalid', 'code' => 401],
-    NotFoundHttpException::class => ['status' => StatusConstant::NotFoundError, 'message' => 'Not Found', 'code' => 404],
-    MethodNotAllowedHttpException::class => ['status' => StatusConstant::NotFoundError, 'message' => 'Method Not Allow', 'code' => 405],
+    AuthenticationException::class => ['status' => StatusEnum::AuthError, 'message' => 'Token is Invalid', 'code' => 401],
+    NotFoundHttpException::class => ['status' => StatusEnum::NotFoundError, 'message' => 'Not Found', 'code' => 404],
+    MethodNotAllowedHttpException::class => ['status' => StatusEnum::NotFoundError, 'message' => 'Method Not Allow', 'code' => 405],
 ];
 ```
 
@@ -79,11 +79,9 @@ protected $doReport = [
 
 #### 建议
 
-一个控制器单一注入一个Service
+一个控制器注入一个或多个Service
 
-Service间可互相调用
-
-一个Service单一注入一个Repository
+一个Service注入一个或多个Repository
 
 一个Repository单一注入一个Model
 

@@ -4,8 +4,63 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "64381ec0171391e04cec71e55955d8da",
+    "content-hash": "9b19bf7f79401655bac438d2e0d23d05",
     "packages": [
+        {
+            "name": "albertcht/lumen-helpers",
+            "version": "v0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/albertcht/lumen-helpers.git",
+                "reference": "276fb17fe04e6301e0c2eaa02d798ffa97ef00fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/albertcht/lumen-helpers/zipball/276fb17fe04e6301e0c2eaa02d798ffa97ef00fc",
+                "reference": "276fb17fe04e6301e0c2eaa02d798ffa97ef00fc",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "laravel/lumen-framework": "^5.1|^6.0",
+                "php": "^5.6|^7.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^6.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AlbertCht\\Lumen\\Helpers\\": "src/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Albert Chen",
+                    "email": "albert.cht@gmail.com"
+                }
+            ],
+            "description": "To support Laravel 's unsupported features in Lumen.",
+            "keywords": [
+                "heplers",
+                "laravel",
+                "lumen"
+            ],
+            "time": "2019-09-29T14:00:28+00:00"
+        },
         {
             "name": "doctrine/inflector",
             "version": "2.0.3",

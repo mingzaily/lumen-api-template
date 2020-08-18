@@ -2,48 +2,40 @@
 
 namespace App\Exceptions;
 
-use App\Constants\StatusConstant;
+use App\Constants\ErrCode;
 use App\Traits\Response;
 use Exception;
-use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class RenderException extends Exception
 {
     use Response;
 
-    protected $status = StatusConstant::ServerError;
+    protected $statusCode;
 
-    public function __construct($status, $message = 'Server Error', $code = 500)
+    public function __construct($code = ErrCode::OwnServer, $message = 'Server Error', $statusCode = HttpResponse::HTTP_INTERNAL_SERVER_ERROR)
     {
+        $this->statusCode = $statusCode;
         parent::__construct($message, $code);
-        $this->setStatus($status);
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getStatus()
+    public function getStatusCode(): int
     {
-        return $this->status;
+        return $this->statusCode;
     }
 
     /**
-     * @param mixed $status
-     */
-    public function setStatus($status): void
-    {
-        $this->status = $status;
-    }
-
-    /**
-     * 转换异常为 HTTP 响应
+     * 自定义异常报告均为JSON响应
      */
     public function render()
     {
         return $this->fail(
-            $this->status,
-            $this->getMessage(),
             $this->getCode(),
+            $this->getMessage(),
+            $this->getStatusCode(),
             ExceptionReport::convertExceptionToArray($this)
         );
     }

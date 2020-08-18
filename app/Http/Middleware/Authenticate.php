@@ -10,25 +10,6 @@ use Illuminate\Http\Request;
 
 class Authenticate
 {
-    use Response;
-    /**
-     * The authentication guard factory instance.
-     *
-     * @var Auth
-     */
-    protected $auth;
-
-    /**
-     * Create a new middleware instance.
-     *
-     * @param Auth $auth
-     * @return void
-     */
-    public function __construct(Auth $auth)
-    {
-        $this->auth = $auth;
-    }
-
     /**
      * Handle an incoming request.
      *
@@ -40,7 +21,7 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if ($this->auth->guard($guard)->guest()) {
+        if (auth($guard)->guest()) {
             throw new AuthenticationException();
         }
 

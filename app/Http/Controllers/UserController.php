@@ -9,23 +9,21 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    protected $service;
+    protected $userService;
 
     /**
-     * Create a new AuthController instance.
+     * Create a new UserController instance.
      *
-     * @param UserService $service
+     * @param UserService $userService
      */
-    public function __construct(UserService $service)
+    public function __construct(UserService $userService)
     {
+        $this->userService = $userService;
         $this->middleware('auth:api', ['except' => ['store']]);
-        $this->service = $service;
     }
 
     public function show()
     {
-        return $this->success(Auth::user());
+        return $this->success(auth()->user());
     }
-
-    // 免注册
 }
