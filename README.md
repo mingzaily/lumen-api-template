@@ -1,12 +1,12 @@
 # Lumen PHP Framework
 
-版本 Laravel Framework Lumen (6.3.3) (Laravel Components ^6.0)
+版本 Laravel Framework Lumen (6.3.5) (Laravel Components ^6.0)
 
-Laravel6.x中文 [开发手册](https://learnku.com/docs/laravel/6.x)
+Laravel6.x中文 [开发手册](https://learnku.com/docs/laravel/6.x)  
+Lumen6.x中文 [开发手册](https://learnku.com/docs/lumen/6.x)  
+lumen7也可以无缝升级  
 
-Lumen6.x中文 [开发手册](https://learnku.com/docs/lumen/6.x)
-
-lumen7  [启动模板](https://github.com/Jiannei/lumen-api-starter)
+- 推荐 lumen7 [启动模板](https://github.com/Jiannei/lumen-api-starter)  
 
 ### 概况
 
@@ -17,7 +17,7 @@ lumen7  [启动模板](https://github.com/Jiannei/lumen-api-starter)
 
 ### 统一的响应结构
 
-> status—— 业务状态值，0为成功，-1为系统错误，>1为业务错误，错误码可自定义`App\Constants\StatusConstant`  
+> status—— 业务状态值  
 > message—— 当状态值为非0时有效，用于显示错误信息。成功显示`Success`  
 > data—— 包含响应的 body。状态值为非`0` 时，data返回错误原因或异常名称（取决于是否开启debug模式）  
 
@@ -38,70 +38,33 @@ lumen7  [启动模板](https://github.com/Jiannei/lumen-api-starter)
 
 ### 错误和异常
 
-`App\Exceptions\Handler`
-
-```
-protected function prepareJsonResponse($request, Exception $exception)
-{
-    // ajax请求
-    // 自定义错误（继承RenderException），抛出时写清楚业务码，错误描述，httpCode
-    // 需要自定义处理的框架异常
-    if ($report = ExceptionReport::shouldReport($request, $exception)) {
-        return $report->report();
-    }
-    // 无法预计的框架异常，检查开启debug决定是否对外暴露错误
-    return $this->fail(
-        StatusConstant::ServerError,
-        'Server Error',
-        HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-        ExceptionReport::convertExceptionToArray($exception)
-    );
-}
-```
+`App\Exceptions\Handler`做了大量处理
 
 `App\Exceptions\ExceptionReport`中doReport是需要进行自定义处理的框架异常，否则一律按系统异常处理
 
-```php
-protected $doReport = [
-    AuthenticationException::class => ['status' => StatusEnum::AuthError, 'message' => 'Token is Invalid', 'code' => 401],
-    NotFoundHttpException::class => ['status' => StatusEnum::NotFoundError, 'message' => 'Not Found', 'code' => 404],
-    MethodNotAllowedHttpException::class => ['status' => StatusEnum::NotFoundError, 'message' => 'Method Not Allow', 'code' => 405],
-];
-```
 
 如有更好的解决方案可以提出
 
-### Repository & Service 模式架构
+#### 开发规范
 
-使用依赖注入进行调用
+##### 依赖注入
+1. 一个控制器可以注入一个或多个Service
+2. 一个Service可以注入一个或多个Repository（没有Repository这一步可以省略）
+3. 一个Repository单一注入一个Model（没有Repository这一步可以省略）
 
-架构可以查看参考中的文档
-
-#### 建议
-
-一个控制器注入一个或多个Service
-
-一个Service注入一个或多个Repository
-
-一个Repository单一注入一个Model
+##### 其他
+1. 统一开发工具
+2. 规范注解
+3. 尽量使用异常作为流程控制，控制器一定是接收正确的返回值，并以固定格式返回给前端
+4. 数据库使用migrate进行版本控制
+5. 开启opcache提高相应速度
 
 #### 使用
 
 为了方便Repository使用model字段，可以安装第三方包`barryvdh/laravel-ide-helper`
-
 1.  `composer require barryvdh/laravel-ide-helper --dev`本地安装ide-helper
-
-2. `bootstrap\app.php`
-
-    将`// $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);`进行反注释
-
-3. 切换到命令行
-
-   `php artisan ide-helper:models`
-
-### 其他
-
-公司IDP有相关计划，看到Laravel China的[帖子](https://learnku.com/articles/45311#reply145129)，也决定撸一个LTS版的
+2. `bootstrap\app.php`添加`$app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);`
+3. 切换到命令行`php artisan ide-helper:models`
 
 #### 参考
 

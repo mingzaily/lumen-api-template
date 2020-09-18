@@ -3,7 +3,7 @@
 
 namespace App\Exceptions;
 
-use App\Constants\ErrCode;
+use App\Exceptions\Code;
 use App\Traits\Response;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
@@ -30,10 +30,10 @@ class ExceptionReport
     protected $report;
 
     protected $doReport = [
-        AuthenticationException::class => ['code' => ErrCode::Authenticate, 'statusCode' => 401],
-        NotFoundHttpException::class => ['code' => ErrCode::NotFound, 'statusCode' => 404, 'message' => 'Route or resource not found'],
-        ModelNotFoundException::class => ['code' => ErrCode::ModelNotFound, 'statusCode' => 404],
-        MethodNotAllowedHttpException::class => ['code' => ErrCode::MethodNotFound, 'statusCode' => 405],
+        AuthenticationException::class => ['code' => Code::Authenticate, 'statusCode' => 401],
+        NotFoundHttpException::class => ['code' => Code::NotFound, 'statusCode' => 404],
+        ModelNotFoundException::class => ['code' => Code::ModelNotFound, 'statusCode' => 404],
+        MethodNotAllowedHttpException::class => ['code' => Code::MethodNotFound, 'statusCode' => 405],
     ];
 
     public function __construct(Request $request, Exception $exception)
@@ -77,9 +77,10 @@ class ExceptionReport
     public function report()
     {
         $exceptionItem = $this->doReport[$this->report];
-        $code = $exceptionItem['code'];
-        $message = $this->exception->getMessage() ? : $exceptionItem['message'];
-        $statusCode = $this->exception->getCode() ? : $exceptionItem['statusCode'];
+        $code          = $exceptionItem['code'];
+        $message       = isset($exceptionItem['message']) ? $exceptionItem['message'] : $this->exception->getMessage();
+        $statusCode    = isset($exceptionItem['statusCode']) ? $exceptionItem['statusCode'] : $this->exception->getCode();
+
         return $this->fail($code, $message, $statusCode);
     }
 }

@@ -22,7 +22,7 @@ class Authenticate
     public function handle($request, Closure $next, $guard = null)
     {
         if (auth($guard)->guest()) {
-            throw new AuthenticationException();
+            throw new AuthenticationException('Unauthenticated');
         }
 
         return $next($request);

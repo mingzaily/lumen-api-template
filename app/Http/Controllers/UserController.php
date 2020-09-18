@@ -3,16 +3,16 @@ namespace App\Http\Controllers;
 
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
+    /**
+     * @var UserService
+     */
     protected $userService;
 
     /**
-     * Create a new UserController instance.
+     * Create a new UserBaseController instance.
      *
      * @param UserService $userService
      */
@@ -22,6 +22,9 @@ class UserController extends Controller
         $this->middleware('auth:api', ['except' => ['store']]);
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function show()
     {
         return $this->success(auth()->user());

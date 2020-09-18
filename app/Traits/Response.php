@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Constants\ErrCode;
+use App\Exceptions\Code;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as HttpStatus;
 
@@ -15,10 +15,7 @@ Trait Response
      * @param mixed $data
      * @return JsonResponse
      */
-    public function fail(int $code = ErrCode::OwnServer,
-                         string $message = '',
-                         int $statusCode = HttpStatus::HTTP_INTERNAL_SERVER_ERROR,
-                         $data = null)
+    public function fail(int $code = Code::OwnServer, string $message = null, int $statusCode = HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $data = null)
     {
         return response()->json([
             'code' => $code,
@@ -27,16 +24,10 @@ Trait Response
         ], $statusCode);
     }
 
-    // 认证错误
-    public function errorUnauthorized($message = 'Unauthorized')
-    {
-        return $this->fail(ErrCode::Authenticate, $message, HttpStatus::HTTP_INTERNAL_SERVER_ERROR);
-    }
-
     // 数据校验错误
     public function errorUnprocessableEntity($message = 'Unprocessable Entity')
     {
-        return $this->fail(ErrCode::Validate, $message, HttpStatus::HTTP_UNPROCESSABLE_ENTITY);
+        return $this->fail(Code::Validate, $message, HttpStatus::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     /**
@@ -48,7 +39,7 @@ Trait Response
     public function success($data = null, string $message = 'OK', $statusCode = HttpStatus::HTTP_OK)
     {
         return response()->json([
-            'code' => ErrCode::Success,
+            'code' => Code::Success,
             'message' => $message,
             'data' => $data
         ], $statusCode);

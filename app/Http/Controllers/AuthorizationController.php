@@ -1,16 +1,14 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Constants\ErrCode;
-use App\Exceptions\RenderException;
 use App\Services\UserService;
 use Carbon\Carbon;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class AuthorizationController extends Controller
+class AuthorizationController extends BaseController
 {
     protected $userService;
 
@@ -29,6 +27,7 @@ class AuthorizationController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     * @throws AuthenticationException
      */
     public function store(Request $request)
     {
@@ -37,12 +36,12 @@ class AuthorizationController extends Controller
             ['username' => 'required', 'password' => 'required']
         );
 
-        throw new RenderException(ErrCode::OwnServer, 'abcdefg');
         // 登录
         $credentials = $request->only(['username', 'password']);
         if (!$token = auth()->attempt($credentials)) {
-            $this->errorUnauthorized();
+            throw new AuthenticationException('Unauthorized');
         }
+
         return $this->respondWithToken($token);
     }
 
@@ -52,6 +51,7 @@ class AuthorizationController extends Controller
     public function destroy()
     {
         auth()->logout();
+
         return $this->noContent('Successfully logged out');
     }
 

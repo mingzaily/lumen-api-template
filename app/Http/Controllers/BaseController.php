@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Traits\Response;
 use Illuminate\Http\Request;
-use Laravel\Lumen\Routing\Controller as BaseController;
+use Laravel\Lumen\Routing\Controller as Controller;
 
-class Controller extends BaseController
+class BaseController extends Controller
 {
     use Response;
 

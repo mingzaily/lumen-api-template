@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 // 授权
-Route::post('authorization', 'AuthorizationController@store');
-Route::delete('authorization', 'AuthorizationController@destroy');
-Route::put('authorization', 'AuthorizationController@update');
+Route::post('authorization', 'AuthorizationBaseController@store');
+Route::delete('authorization', 'AuthorizationBaseController@destroy');
+Route::put('authorization', 'AuthorizationBaseController@update');
 // 用户
-Route::get('/user', 'UserController@show');
-Route::post('/user', 'UserController@store');
+Route::get('/user', 'UserBaseController@show');
+Route::post('/user', 'UserBaseController@store');

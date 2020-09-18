@@ -9,7 +9,6 @@
         "albertcht/lumen-helpers": "^0.8.0",
         "guzzlehttp/guzzle": "^6.5",
         "laravel/lumen-framework": "^6.0",
-        "prettus/l5-repository": "^2.6",
         "tymon/jwt-auth": "1.*"
     },
     "require-dev": {

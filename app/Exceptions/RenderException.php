@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\Constants\ErrCode;
+use App\Exceptions\Code;
 use App\Traits\Response;
 use Exception;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
@@ -13,7 +13,7 @@ class RenderException extends Exception
 
     protected $statusCode;
 
-    public function __construct($code = ErrCode::OwnServer, $message = 'Server Error', $statusCode = HttpResponse::HTTP_INTERNAL_SERVER_ERROR)
+    public function __construct($code = Code::OwnServer, $message = 'Server Error', $statusCode = HttpResponse::HTTP_INTERNAL_SERVER_ERROR)
     {
         $this->statusCode = $statusCode;
         parent::__construct($message, $code);
