@@ -39,7 +39,7 @@ class AuthorizationController extends BaseController
         // 登录
         $credentials = $request->only(['username', 'password']);
         if (!$token = auth()->attempt($credentials)) {
-            throw new AuthenticationException('Unauthorized');
+            throw new AuthenticationException('Unauthenticated');
         }
 
         return $this->respondWithToken($token);

@@ -15,7 +15,7 @@ Trait Response
      * @param mixed $data
      * @return JsonResponse
      */
-    public function fail(int $code = Code::OwnServer, string $message = null, int $statusCode = HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $data = null)
+    public function fail(int $code = Code::SYSTEM, string $message = null, int $statusCode = 500, $data = null)
     {
         return response()->json([
             'code' => $code,
@@ -24,22 +24,16 @@ Trait Response
         ], $statusCode);
     }
 
-    // 数据校验错误
-    public function errorUnprocessableEntity($message = 'Unprocessable Entity')
-    {
-        return $this->fail(Code::Validate, $message, HttpStatus::HTTP_UNPROCESSABLE_ENTITY);
-    }
-
     /**
      * @param array|null $data
      * @param string $message
      * @param int $statusCode
      * @return JsonResponse
      */
-    public function success($data = null, string $message = 'OK', $statusCode = HttpStatus::HTTP_OK)
+    public function success($data = null, string $message = 'OK', int $statusCode = 200)
     {
         return response()->json([
-            'code' => Code::Success,
+            'code' => Code::SUCCESS,
             'message' => $message,
             'data' => $data
         ], $statusCode);
@@ -48,15 +42,5 @@ Trait Response
     public function created($data = null, $message = 'Created')
     {
         return $this->success($data, $message, HttpStatus::HTTP_CREATED);
-    }
-
-    public function noContent($message = 'No Content')
-    {
-        return $this->success(null, $message, HttpStatus::HTTP_NO_CONTENT);
-    }
-
-    public function accepted($message = 'Accepted')
-    {
-        return $this->success(null, $message, HttpStatus::HTTP_ACCEPTED);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\Code;
 use App\Traits\Response;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller as Controller;
@@ -22,6 +23,6 @@ class BaseController extends Controller
         if (isset(static::$responseBuilder)) {
             return call_user_func(static::$responseBuilder, $request, $errors);
         }
-        return $this->errorUnprocessableEntity(array_shift($errors)[0]);
+        return $this->fail(Code::VALIDATION, array_shift($errors)[0], 422);
     }
 }

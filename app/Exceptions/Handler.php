@@ -88,7 +88,7 @@ class Handler extends ExceptionHandler
         // 既不拦截也不是自定义
         // 无法预计的框架异常，检查开启debug决定是否对外暴露错误
         return $this->fail(
-            Code::OwnServer,
+            Code::SYSTEM,
             '服务不可用，请稍后尝试',
             HttpStatus::HTTP_INTERNAL_SERVER_ERROR,
             ExceptionReport::convertExceptionToArray($exception)
