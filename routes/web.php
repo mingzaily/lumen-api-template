@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Route;
 | and give it the Closure to call when that URI is requested.
 |
 */
-
+// 首页
+Route::get('/', function () { return view('welcome'); });
 // 授权
 Route::post('authorization', 'AuthorizationBaseController@store');
 Route::delete('authorization', 'AuthorizationBaseController@destroy');

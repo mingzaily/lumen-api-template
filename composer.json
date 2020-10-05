@@ -9,6 +9,7 @@
         "albertcht/lumen-helpers": "^0.8.0",
         "guzzlehttp/guzzle": "^6.5",
         "laravel/lumen-framework": "^6.0",
+        "mingzaily/lumen-permission": "dev-master",
         "tymon/jwt-auth": "1.*"
     },
     "require-dev": {
@@ -42,5 +43,11 @@
         "optimize-autoloader": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": {
+        "lumen-permission": {
+            "type": "path",
+            "url": "../lumen-permission"
+        }
+    }
 }
